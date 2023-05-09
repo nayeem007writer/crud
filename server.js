@@ -1,11 +1,11 @@
-const express = require('express');
-const usersRoutes = require('./user.routes');
-const app = express();
+(function () {
+    const path = require('path');
+    const config = require(path.join(process.cwd(),'./src/config/index'));
+    
+    config.initEnviromentVariables();
 
-app.use(express.json());
 
-usersRoutes(app);
+    const app = require('./src/config/lib/app');
+    app.start();
 
-app.listen(3000, (req, res)=>{
-    console.log('server listing on port 3000');
-})
+})();
