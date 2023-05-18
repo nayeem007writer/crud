@@ -1,37 +1,27 @@
-const { string, object } = require('yup');
+const bcrypt = require('bcrypt');
 
 const users = [];
 
 function createUsers(req, res) {
-    const body = req.body;
-    const email = body.email;
+    const { firstName, lastName, email, password } = req.body;
 
-    const regesterSchema = object().shape({
-        email: string()
-               .email("this field should be a valid email address")
-               .required('this feild must not be empty'),
-        
-        name: string()
-                .min(2, "this feild must be at least 2 characters long")
-                .max(30, "this feild must be at most 30 character long")   
-                .required('this feild must not be empty'),    
-    })
+    const hashedPassword = bcrypt.hashSync(password, 9);
 
-    regesterSchema.validate({ email:email, name:name }, { abortEarly:false })
-    .then(function() {
-        const user = users.find(user => user.email === email);
+    const user = users.find(user => user.email === email);
 
-        if(user) return res.status(400).send("User already exists");
+    if(user) return res.status(400).send("User already exists");
+
+    const newUser = {
+        firstName,
+        lastName,
+        email,
+        password:hashedPassword
+    }
     
-        users.push(body);
-        res.status(201).send(body);  
+    users.push(newUser);
 
-    })
-    .catch(function() {
-        const errMsg = { path:err.inner[0].path , message:err.inner[0].message };
 
-        res.status(400).send(errMsg);
-    });
+    res.status(201).send(newUser);  
 
 }
 
