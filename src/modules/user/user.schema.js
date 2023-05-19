@@ -19,11 +19,20 @@ const createSchema = object().shape({
     confirmPassword: string()
             .required("confirm password is required")
             .oneOf([ref['password'],null],"password and confirm password must be matched")
-
-
-
-
     
 });
 
+const userUpdateSchema = object().shape({
+        firstName: string()
+                .min(2, "this feild must be at least 2 characters long")
+                .max(30, "this feild must be at most 30 character long")   
+                .required('this feild must not be empty'),    
+        lastName: string()
+                .min(2, "this feild must be at least 2 characters long")
+                .max(30, "this feild must be at most 30 character long")   
+                .required('this feild must not be empty'),  
+        
+    });
+
 module.exports.createSchema = createSchema;
+module.exports.userUpdateSchema = userUpdateSchema;
